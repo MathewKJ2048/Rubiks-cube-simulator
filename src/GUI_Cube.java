@@ -1,42 +1,32 @@
 import cube.Cube;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Calendar;
-import java.util.concurrent.TimeUnit;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GUI_Cube extends JFrame
 {
     private final Cube cube = new Cube();
     private JPanel mainPanel;
     private JTextField inputTextField;
-    private JTextArea drawArea;
     private JButton solveButton;
     private JTextArea logArea;
     private JButton clearButton;
+    private JPanel drawPanel;
 
     private void set_cube()
     {
-        StringBuilder b = new StringBuilder();
-        b.append("\n\t ------------------");
-        b.append("\n\t|\\  "+cube.cube[0][0][0].up+"  \\  "+cube.cube[0][0][1].up+"  \\  "+cube.cube[0][0][2].up+"  \\");
-        b.append("\n\t|"+cube.cube[0][0][0].left+" ------------------");
-        b.append("\n\t|\\|\\  "+cube.cube[0][1][0].up+"  \\  "+cube.cube[0][1][1].up+"  \\  "+cube.cube[0][1][2].up+"  \\");
-        b.append("\n\t|"+cube.cube[1][0][0].left+"|"+cube.cube[0][1][0].left+" ------------------");
-        b.append("\n\t|\\|\\|\\  "+cube.cube[0][2][0].up+"  \\  "+cube.cube[0][2][1].up+"  \\  "+cube.cube[0][2][2].up+"  \\");
-        b.append("\n\t\\"+cube.cube[2][0][0].left+"|"+cube.cube[1][1][0].left+"\\"+cube.cube[0][2][0].left+" ------------------");
-        b.append("\n\t \\|\\|\\|  "+cube.cube[0][2][0].face+"  |  "+cube.cube[0][2][1].face+"  |  "+cube.cube[0][2][2].face+"  |");
-        b.append("\n\t  \\"+cube.cube[2][1][0].left+"\\"+cube.cube[1][2][0].left+" ------------------");
-        b.append("\n\t   \\|\\|  "+cube.cube[1][2][0].face+"  |  "+cube.cube[1][2][1].face+"  |  "+cube.cube[1][2][2].face+"  |");
-        b.append("\n\t    \\"+cube.cube[2][2][0].left+" ------------------");
-        b.append("\n\t     \\|  "+cube.cube[2][2][0].face+"  |  "+cube.cube[2][2][1].face+"  |  "+cube.cube[2][2][2].face+"  |");
-        b.append("\n\t       ------------------");
-        drawArea.setText(b.toString());
+        drawPanel.repaint();
+    }
+    private void set_log()
+    {
+        List<String> history = this.cube.get_history();
+        StringBuilder b = new StringBuilder("");
+        for(String s : history)b.append(s+"\n");
+        this.logArea.setText(b.toString());
     }
     GUI_Cube()
     {
@@ -59,56 +49,260 @@ public class GUI_Cube extends JFrame
                     try{
                         cube.process(input);
                         set_cube();
-                        logArea.append("\n"+input);
+                        set_log();
                     }
                     catch(Exception ex)
                     {
                         logArea.append("\nunidentified move:" +"\""+input+"\"");
                     }
-                    System.out.println("enter");
                 }
             }
         });
-        clearButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                logArea.setText("");
-            }
+        clearButton.addActionListener(e -> {
+            logArea.setText("");cube.clear_history();
         });
-        solveButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Cube_solver.layer_1(cube);
-                set_cube();
-                drawArea.repaint();
-                logArea.append("\nlayer 1 solved");
-                logArea.revalidate();
-                logArea.repaint();
-                time_delay(1000);
-                //
-                Cube_solver.layer_2(cube);
-                set_cube();
-                drawArea.repaint();
-                logArea.append("\nlayer 2 solved");
-                logArea.repaint();
-                time_delay(1000);
-                //
-                Cube_solver.layer_3(cube);
-                set_cube();
-                drawArea.repaint();
-                logArea.append("\nlayer 3 solved");
-                logArea.repaint();
-            }
+        solveButton.addActionListener(e -> {
+            cube.append_history("solution:");
+            Cube_solver.solve(cube);
+            set_cube();
+            set_log();
         });
     }
-    private void time_delay(int mil)
-    {
-        int c_t = (Calendar.getInstance()).get(Calendar.MILLISECOND) + 1000*(Calendar.getInstance()).get(Calendar.SECOND) + 60*1000*(Calendar.getInstance()).get(Calendar.MINUTE);
-        int d;
-        do
+    public static int scale = 20;
+    public static int distance = 20;
+    private void createUIComponents() {
+        // TODO: place custom component creation code here
+        class DrawPanel extends JPanel
         {
-            d = (Calendar.getInstance()).get(Calendar.MILLISECOND) + 1000*(Calendar.getInstance()).get(Calendar.SECOND) + 60*1000*(Calendar.getInstance()).get(Calendar.MINUTE) - c_t;
+            public Color get_colour(char ch)
+            {
+                if(ch == 'W')return Color.WHITE;
+                else if(ch == 'Y')return Color.YELLOW;
+                else if(ch == 'B')return Color.BLUE;
+                else if(ch == 'G')return Color.GREEN;
+                else if(ch == 'O')return Color.ORANGE;
+                else if(ch == 'R')return Color.RED;
+                else return Color.BLACK;
+            }
+            public void paint(Graphics g)
+            {
+                class Polygon
+                {
+                    int[] x;
+                    int[] y;
+                    Polygon(int[] x, int[] y, int x_origin, int y_origin, int scale)
+                    {
+                        this.x = new int[x.length];
+                        this.y = new int[y.length];
+                        for(int i=0;i<x.length;i++)
+                        {
+                            this.x[i] = x[i]*scale+x_origin;
+                        }
+                        for(int i=0;i<y.length;i++)
+                        {
+                            this.y[i] = -y[i]*scale+y_origin;
+                        }
+                    }
+                    void draw()
+                    {
+                        g.drawPolygon(x,y,x.length);
+                    }
+                    void fill()
+                    {
+                        g.fillPolygon(x,y,x.length);
+                    }
+                }
+                for(int i=0;i<3;i++)
+                {
+                    for(int j=0;j<3;j++)
+                    {
+                        int x1 = 2*i;
+                        int x2 = x1+2;
+                        int x3 = x1+2;
+                        int x4 = x1;
+                        int y1 = i-2*j-2;
+                        int y2 = y1+1;
+                        int y3 = y1+3;
+                        int y4 = y1+2;
+                        g.setColor(get_colour(cube.get_cube()[j][2][i].face));
+                        new Polygon(new int[]{x1,x2,x3,x4},new int[]{y1,y2,y3,y4},250,250,scale).fill();
+                    }
+                }
+                for(int i=0;i<3;i++)
+                {
+                    for(int j=0;j<3;j++)
+                    {
+                        int x1 = -2*i;
+                        int x2 = x1-2;
+                        int x3 = x1-2;
+                        int x4 = x1;
+                        int y1 = i-2*j-2;
+                        int y2 = y1+1;
+                        int y3 = y1+3;
+                        int y4 = y1+2;
+                        g.setColor(get_colour(cube.get_cube()[j][2-i][0].left));
+                        new Polygon(new int[]{x1,x2,x3,x4},new int[]{y1,y2,y3,y4},250,250,scale).fill();
+                    }
+                }
+                for(int i=0;i<3;i++)
+                {
+                    for(int j=0;j<3;j++)
+                    {
+                        int x1 = 2*(i-j);
+                        int x2 = x1+2;
+                        int x3 = x1;
+                        int x4 = x1-2;
+                        int y1 = (i+j);
+                        int y2 = y1+1;
+                        int y3 = y1+2;
+                        int y4 = y1+1;
+                        g.setColor(get_colour(cube.get_cube()[0][2-j][i].up));
+                        new Polygon(new int[]{x1,x2,x3,x4},new int[]{y1,y2,y3,y4},250,250,scale).fill();
+                    }
+                }
+                for(int i=0;i<3;i++)
+                {
+                    for(int j=0;j<3;j++)
+                    {
+                        int x1 = 2*i;
+                        int x2 = x1+2;
+                        int x3 = x1+2;
+                        int x4 = x1;
+                        int y1 = -i+2*j;
+                        int y2 = y1-1;
+                        int y3 = y1+1;
+                        int y4 = y1+2;
+                        g.setColor(get_colour(cube.get_cube()[2-j][0][2-i].back));
+                        new Polygon(new int[]{x1,x2,x3,x4},new int[]{y1,y2,y3,y4},250+distance*scale,250,scale).fill();
+                    }
+                }
+                for(int i=0;i<3;i++)
+                {
+                    for(int j=0;j<3;j++)
+                    {
+                        int x1 = -2*i;
+                        int x2 = x1-2;
+                        int x3 = x1-2;
+                        int x4 = x1;
+                        int y1 = -i+2*j;
+                        int y2 = y1-1;
+                        int y3 = y1+1;
+                        int y4 = y1+2;
+                        g.setColor(get_colour(cube.get_cube()[2-j][i][2].right));
+                        new Polygon(new int[]{x1,x2,x3,x4},new int[]{y1,y2,y3,y4},250+distance*scale,250,scale).fill();
+                    }
+                }
+                for(int i=0;i<3;i++)
+                {
+                    for(int j=0;j<3;j++)
+                    {
+                        int x1 = 2*(i-j);
+                        int x2 = x1+2;
+                        int x3 = x1;
+                        int x4 = x1-2;
+                        int y1 = -(i+j);
+                        int y2 = y1-1;
+                        int y3 = y1-2;
+                        int y4 = y1-1;
+                        g.setColor(get_colour(cube.get_cube()[2][j][2-i].down));
+                        new Polygon(new int[]{x1,x2,x3,x4},new int[]{y1,y2,y3,y4},250+distance*scale,250,scale).fill();
+                    }
+                }
+                //borders
+                g.setColor(Color.BLACK);
+                for(int i=0;i<3;i++)
+                {
+                    for(int j=0;j<3;j++)
+                    {
+                        int x1 = 2*i;
+                        int x2 = x1+2;
+                        int x3 = x1+2;
+                        int x4 = x1;
+                        int y1 = i-2*j-2;
+                        int y2 = y1+1;
+                        int y3 = y1+3;
+                        int y4 = y1+2;
+                        new Polygon(new int[]{x1,x2,x3,x4},new int[]{y1,y2,y3,y4},250,250,scale).draw();
+                    }
+                }
+                for(int i=0;i<3;i++)
+                {
+                    for(int j=0;j<3;j++)
+                    {
+                        int x1 = -2*i;
+                        int x2 = x1-2;
+                        int x3 = x1-2;
+                        int x4 = x1;
+                        int y1 = i-2*j-2;
+                        int y2 = y1+1;
+                        int y3 = y1+3;
+                        int y4 = y1+2;
+                        new Polygon(new int[]{x1,x2,x3,x4},new int[]{y1,y2,y3,y4},250,250,scale).draw();
+                    }
+                }
+                for(int i=0;i<3;i++)
+                {
+                    for(int j=0;j<3;j++)
+                    {
+                        int x1 = 2*(i-j);
+                        int x2 = x1+2;
+                        int x3 = x1;
+                        int x4 = x1-2;
+                        int y1 = (i+j);
+                        int y2 = y1+1;
+                        int y3 = y1+2;
+                        int y4 = y1+1;
+                        new Polygon(new int[]{x1,x2,x3,x4},new int[]{y1,y2,y3,y4},250,250,scale).draw();
+                    }
+                }
+                for(int i=0;i<3;i++)
+                {
+                    for(int j=0;j<3;j++)
+                    {
+                        int x1 = 2*i;
+                        int x2 = x1+2;
+                        int x3 = x1+2;
+                        int x4 = x1;
+                        int y1 = -i+2*j;
+                        int y2 = y1-1;
+                        int y3 = y1+1;
+                        int y4 = y1+2;
+                        new Polygon(new int[]{x1,x2,x3,x4},new int[]{y1,y2,y3,y4},250+distance*scale,250,scale).draw();
+                    }
+                }
+                for(int i=0;i<3;i++)
+                {
+                    for(int j=0;j<3;j++)
+                    {
+                        int x1 = -2*i;
+                        int x2 = x1-2;
+                        int x3 = x1-2;
+                        int x4 = x1;
+                        int y1 = -i+2*j;
+                        int y2 = y1-1;
+                        int y3 = y1+1;
+                        int y4 = y1+2;
+                        new Polygon(new int[]{x1,x2,x3,x4},new int[]{y1,y2,y3,y4},250+distance*scale,250,scale).draw();
+                    }
+                }
+                for(int i=0;i<3;i++)
+                {
+                    for(int j=0;j<3;j++)
+                    {
+                        int x1 = 2*(i-j);
+                        int x2 = x1+2;
+                        int x3 = x1;
+                        int x4 = x1-2;
+                        int y1 = -(i+j);
+                        int y2 = y1-1;
+                        int y3 = y1-2;
+                        int y4 = y1-1;
+                        new Polygon(new int[]{x1,x2,x3,x4},new int[]{y1,y2,y3,y4},250+distance*scale,250,scale).draw();
+                    }
+                }
+            }
         }
-        while(d <= mil);
+
+        drawPanel = new DrawPanel();
     }
 }

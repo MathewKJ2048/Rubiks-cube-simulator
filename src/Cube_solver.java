@@ -237,7 +237,7 @@ public class Cube_solver
         }
     }
     //
-    public static void layer_1(Cube c)
+    private static void layer_1(Cube c)
     {
         if(c.get_col(new int[]{0,1,1},'u') != c.get_col(0))
         {
@@ -273,7 +273,7 @@ public class Cube_solver
             c.fi();
         }        
     }    
-    public static void layer_2(Cube c)
+    private static void layer_2(Cube c)
     {
         if(c.get_col(new int[]{0,1,1},'u') != c.get_col(1))
         {
@@ -561,7 +561,7 @@ public class Cube_solver
         }
     }
     //
-    public static void layer_3(Cube c)
+    private static void layer_3(Cube c)
     {
         if(c.get_col(new int[]{0,1,1},'u') != c.get_col(1))
         {
