@@ -6,11 +6,11 @@ public class Block
    protected final int z_o;
    //
    public char up;
-   protected char down;
+   public char down;
    public char face;
-   protected char back;
+   public char back;
    public char left;
-   protected char right;
+   public char right;
    //
    protected int x;
    protected int y;

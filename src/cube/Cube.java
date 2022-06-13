@@ -1,12 +1,38 @@
 package cube;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class Cube
 {
-    char[] colours = new char[6];
-    public Block[][][] cube = new Block[3][3][3];
+    private char[] colours = new char[6];
+    public char[] get_colours()
+    {
+        return this.colours;
+    }
+    private Block[][][] cube = new Block[3][3][3];
+    public Block[][][] get_cube()
+    {
+        return cube;
+    }
+    private List<String> history;
+    public List<String> get_history()
+    {
+        return history;
+    }
+    public void clear_history()
+    {
+        history.clear();
+    }
+    public void append_history(String comment)
+    {
+        history.add(comment);
+    }
     //
     public Cube()
     {
         this.colours = new char[]{'W','Y','R','O','G','B'};
+        this.history = new ArrayList<>();
         set_cube();
     }
     public Cube(Cube c)
@@ -25,6 +51,8 @@ public class Cube
                 }
             }
         }
+        this.history  = new ArrayList<>();
+        for(String s : c.history)this.history.add(s);
     }
     //
     private void make_blocks()
@@ -109,6 +137,8 @@ public class Cube
     //
     public void f()
     {
+        history.add("f");
+        //history.add("");
         Block[][] temp = new Block[3][3];
         for(int i = 0 ; i < 3 ; i++)
         {
@@ -129,6 +159,7 @@ public class Cube
     }
     public void fi()
     {
+        history.add("fi");
         Block[][] temp = new Block[3][3];
         for(int i = 0 ; i < 3 ; i++)
         {
@@ -150,6 +181,7 @@ public class Cube
     //
     public void b()
     {
+        history.add("b");
         Block[][] temp = new Block[3][3];
         for(int i = 0 ; i < 3 ; i++)
         {
@@ -170,6 +202,7 @@ public class Cube
     }
     public void bi()
     {
+        history.add("bi");
         Block[][] temp = new Block[3][3];
         for(int i = 0 ; i < 3 ; i++)
         {
@@ -191,6 +224,7 @@ public class Cube
     //
     public void l()
     {
+        history.add("l");
         Block[][] temp = new Block[3][3];
         for(int i = 0 ; i < 3 ; i++)
         {
@@ -211,6 +245,7 @@ public class Cube
     }
     public void li()
     {
+        history.add("li");
         Block[][] temp = new Block[3][3];
         for(int i = 0 ; i < 3 ; i++)
         {
@@ -232,6 +267,7 @@ public class Cube
     //
     public void r()
     {
+        history.add("r");
         Block[][] temp = new Block[3][3];
         for(int i = 0 ; i < 3 ; i++)
         {
@@ -252,6 +288,7 @@ public class Cube
     }
     public void ri()
     {
+        history.add("ri");
         Block[][] temp = new Block[3][3];
         for(int i = 0 ; i < 3 ; i++)
         {
@@ -273,6 +310,7 @@ public class Cube
     //
     public void u()
     {
+        history.add("u");
         Block[][] temp = new Block[3][3];
         for(int i = 0 ; i < 3 ; i++)
         {
@@ -293,6 +331,7 @@ public class Cube
     }
     public void ui()
     {
+        history.add("ui");
         Block[][] temp = new Block[3][3];
         for(int i = 0 ; i < 3 ; i++)
         {
@@ -314,6 +353,7 @@ public class Cube
     //
     public void d()
     {
+        history.add("d");
         Block[][] temp = new Block[3][3];
          for(int i = 0 ; i < 3 ; i++)
         {
@@ -334,6 +374,7 @@ public class Cube
     }
     public void di()
     {
+        history.add("di");
         Block[][] temp = new Block[3][3];
         for(int i = 0 ; i < 3 ; i++)
         {
@@ -355,6 +396,7 @@ public class Cube
     //
     public void turn_r()
     {
+        history.add("R");
         Block[][] temp = new Block[3][3];
         for(int l = 0 ; l < 3 ; l++)
         {
@@ -378,6 +420,7 @@ public class Cube
     }
     public void turn_l()
     {
+        history.add("L");
         Block[][] temp = new Block[3][3];
         for(int l = 0 ; l < 3 ; l++)
         {
@@ -402,6 +445,7 @@ public class Cube
     //
     public void invert()
     {
+        history.add("I");
         Block[][] temp = new Block[3][3];
         for(int l = 0 ; l < 3 ; l++)
         {
@@ -622,7 +666,7 @@ public class Cube
     }
     //
     //
-    public void process(String move) throws Exception
+    public void process(String move)
     {
         if(move.equals("u"))
         {
@@ -688,38 +732,6 @@ public class Cube
         {
             scramble();
         }
-        else throw new Exception("unidentified move");
+        else history.add("Unrecognized command: \""+move+"\"");
     }
-    public void print()
-    {
-        System.out.println(" ------------------");
-        System.out.println("|\\  "+this.cube[0][0][0].up+"  \\  "+this.cube[0][0][1].up+"  \\  "+this.cube[0][0][2].up+"  \\");
-        System.out.println("|"+this.cube[0][0][0].left+" ------------------");
-        System.out.println("|\\|\\  "+this.cube[0][1][0].up+"  \\  "+this.cube[0][1][1].up+"  \\  "+this.cube[0][1][2].up+"  \\");
-        System.out.println("|"+this.cube[1][0][0].left+"|"+this.cube[0][1][0].left+" ------------------");
-        System.out.println("|\\|\\|\\  "+this.cube[0][2][0].up+"  \\  "+this.cube[0][2][1].up+"  \\  "+this.cube[0][2][2].up+"  \\");
-        System.out.println("\\"+this.cube[2][0][0].left+"|"+this.cube[1][1][0].left+"\\"+this.cube[0][2][0].left+" ------------------");
-        System.out.println(" \\|\\|\\|  "+this.cube[0][2][0].face+"  |  "+this.cube[0][2][1].face+"  |  "+this.cube[0][2][2].face+"  |");
-        System.out.println("  \\"+this.cube[2][1][0].left+"\\"+this.cube[1][2][0].left+" ------------------");
-        System.out.println("   \\|\\|  "+this.cube[1][2][0].face+"  |  "+this.cube[1][2][1].face+"  |  "+this.cube[1][2][2].face+"  |");
-        System.out.println("    \\"+this.cube[2][2][0].left+" ------------------");
-        System.out.println("     \\|  "+this.cube[2][2][0].face+"  |  "+this.cube[2][2][1].face+"  |  "+this.cube[2][2][2].face+"  |");
-        System.out.println("       ------------------");
-    }
-    /*
-    
-     -----------------
-    |\  W  \  W  \  W  \
-    |R------------------
-    |\|\  W  \  W  \  W  \
-    |R|R------------------
-    |\|\|\  W  \  W  \  W  \
-    \R|R\R------------------
-     \|\|\|  B  |  B  |  B  |
-      \R\R------------------
-       \|\|  B  |  B  |  B  |
-        \R------------------
-         \|  B  |  B  |  B  |
-          ------------------
-    */
 }
