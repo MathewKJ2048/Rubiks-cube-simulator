@@ -1,19 +1,16 @@
-draw polygons
-changeable size (scaling)
+doc:
+meaning of commands
+guide to code
+  how to change scaling
+  how to change colours
+  how to change laf
 
 buttons for commands
 l li r ri
 f fi b bi
 u ui d di
-F FI
-L LI
-U UI
-scr
-sol
+tl tr rf rb
+scramble, scr
+solve, sol
 
-solve in log
-
-display during solve
-1) screen
-2) console
-
+solve step by step
