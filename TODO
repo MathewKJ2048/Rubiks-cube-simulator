@@ -1,3 +1,5 @@
+read scaling and laf and framerate and interval from config.json
+
 doc:
 how to install
 how to use
