@@ -18,7 +18,7 @@ public class Test
         for(int i = 1 ; i <= 10000 ; i++)
         {
             c.scramble();
-            Cube_solver.solve(c);
+            Cube_solver.solve(c,0);
         }
         
         cl = Calendar.getInstance();

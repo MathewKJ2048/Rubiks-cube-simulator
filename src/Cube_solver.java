@@ -237,15 +237,7 @@ public class Cube_solver
         }
     }
     //
-    private static void layer_1(Cube c)
-    {
-        if(c.get_col(new int[]{0,1,1},'u') != c.get_col(0))
-        {
-            c.invert();
-        }
-        white_cross(c);
-        white_corners(c);
-    }
+
     //
     //
     private static void insert_mid(Cube c,char s)
@@ -273,50 +265,7 @@ public class Cube_solver
             c.fi();
         }        
     }    
-    private static void layer_2(Cube c)
-    {
-        if(c.get_col(new int[]{0,1,1},'u') != c.get_col(1))
-        {
-            c.invert();
-        }
-        int[] p_pos_c;
-        int[] p_pos_mid;
-        for(int i = 0 ; i < 4 ; i++)
-        {
-            p_pos_c = centres()[i];
-            p_pos_mid = v_edges(1)[i];
-            turn_till_face(c,p_pos_mid);
-            //
-            if(lvl(c,p_pos_mid) == 1)
-            {
-                if(side(c,p_pos_mid) == 0)
-                {
-                    insert_mid(c,'l');                  
-                }
-                else if(side(c,p_pos_mid) == 2)
-                {
-                    insert_mid(c,'r');             
-                }
-            }
-            //
-            turn_till_face(c,p_pos_c);
-            while(!is_face(c,p_pos_mid))
-            {
-                c.u();               
-            }
-            //
-            if(is_same(c,p_pos_mid,'p'))
-            {
-                insert_mid(c,'r');
-            }
-            else
-            {
-                c.turn_r();
-                c.ui();
-                insert_mid(c,'l');
-            }           
-        }
-    }
+
     //
     //
     private static boolean[] cross_condition(Cube c)
@@ -561,24 +510,94 @@ public class Cube_solver
         }
     }
     //
-    private static void layer_3(Cube c)
+    private static void bring_white_to_top(Cube c)
     {
-        if(c.get_col(new int[]{0,1,1},'u') != c.get_col(1))
+        for(int i=0;i<4;i++)
         {
-            c.invert();
+            if(c.get_col(new int[]{0,1,1},'u')==c.get_col(0))break;
+            c.rf();
         }
-        yellow_cross_bring(c);
-        yellow_cross_set(c);
-        yellow_corners_bring(c);
-        c.invert();
-        yellow_corners_set(c);
+        c.turn_l();
+        for(int i=0;i<4;i++)
+        {
+            if(c.get_col(new int[]{0,1,1},'u')==c.get_col(0))break;
+            c.rf();
+        }
     }
-    //
-    //
-    public static void solve(Cube c)
+    public static void solve(Cube c, long interval)
     {
-        layer_1(c);
-        layer_2(c);
-        layer_3(c);
+        c.interval = interval;
+        c.append_history("solution:");
+        //layer 1
+        bring_white_to_top(c);
+        
+        white_cross(c);
+        
+        white_corners(c);
+        
+        //layer 2
+        bring_white_to_top(c);
+        c.invert();
+        
+        int[] p_pos_c;
+        int[] p_pos_mid;
+        for(int i = 0 ; i < 4 ; i++)
+        {
+            p_pos_c = centres()[i];
+            p_pos_mid = v_edges(1)[i];
+            turn_till_face(c,p_pos_mid);
+            
+            //
+            if(lvl(c,p_pos_mid) == 1)
+            {
+                if(side(c,p_pos_mid) == 0)
+                {
+                    insert_mid(c,'l');
+                    
+                }
+                else if(side(c,p_pos_mid) == 2)
+                {
+                    insert_mid(c,'r');
+                    
+                }
+            }
+            //
+            turn_till_face(c,p_pos_c);
+            
+            while(!is_face(c,p_pos_mid))
+            {
+                c.u();
+            }
+            
+            //
+            if(is_same(c,p_pos_mid,'p'))
+            {
+                insert_mid(c,'r');
+                
+            }
+            else
+            {
+                c.turn_r();
+                
+                c.ui();
+                
+                insert_mid(c,'l');
+                
+            }
+        }
+        //layer 3
+        bring_white_to_top(c);
+        c.invert();
+        
+        yellow_cross_bring(c);
+        
+        yellow_cross_set(c);
+        
+        yellow_corners_bring(c);
+        
+        c.invert();
+        
+        yellow_corners_set(c);
+        c.interval = 0;
     }
 }
