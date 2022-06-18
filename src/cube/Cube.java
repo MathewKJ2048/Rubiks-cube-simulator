@@ -2,9 +2,11 @@ package cube;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class Cube
 {
+    public long interval = 0;
     private char[] colours = new char[6];
     public char[] get_colours()
     {
@@ -137,8 +139,8 @@ public class Cube
     //
     public void f()
     {
-        history.add("f");
-        //history.add("");
+        try{Thread.sleep(interval);}catch(Exception ex){}
+        history.add("F");
         Block[][] temp = new Block[3][3];
         for(int i = 0 ; i < 3 ; i++)
         {
@@ -159,7 +161,8 @@ public class Cube
     }
     public void fi()
     {
-        history.add("fi");
+        try{Thread.sleep(interval);}catch(Exception ex){}
+        history.add("FI");
         Block[][] temp = new Block[3][3];
         for(int i = 0 ; i < 3 ; i++)
         {
@@ -181,7 +184,8 @@ public class Cube
     //
     public void b()
     {
-        history.add("b");
+        try{Thread.sleep(interval);}catch(Exception ex){}
+        history.add("B");
         Block[][] temp = new Block[3][3];
         for(int i = 0 ; i < 3 ; i++)
         {
@@ -202,7 +206,8 @@ public class Cube
     }
     public void bi()
     {
-        history.add("bi");
+        try{Thread.sleep(interval);}catch(Exception ex){}
+        history.add("BI");
         Block[][] temp = new Block[3][3];
         for(int i = 0 ; i < 3 ; i++)
         {
@@ -224,7 +229,8 @@ public class Cube
     //
     public void l()
     {
-        history.add("l");
+        try{Thread.sleep(interval);}catch(Exception ex){}
+        history.add("L");
         Block[][] temp = new Block[3][3];
         for(int i = 0 ; i < 3 ; i++)
         {
@@ -245,7 +251,8 @@ public class Cube
     }
     public void li()
     {
-        history.add("li");
+        try{Thread.sleep(interval);}catch(Exception ex){}
+        history.add("LI");
         Block[][] temp = new Block[3][3];
         for(int i = 0 ; i < 3 ; i++)
         {
@@ -267,7 +274,8 @@ public class Cube
     //
     public void r()
     {
-        history.add("r");
+        try{Thread.sleep(interval);}catch(Exception ex){}
+        history.add("R");
         Block[][] temp = new Block[3][3];
         for(int i = 0 ; i < 3 ; i++)
         {
@@ -288,7 +296,8 @@ public class Cube
     }
     public void ri()
     {
-        history.add("ri");
+        try{Thread.sleep(interval);}catch(Exception ex){}
+        history.add("RI");
         Block[][] temp = new Block[3][3];
         for(int i = 0 ; i < 3 ; i++)
         {
@@ -310,7 +319,8 @@ public class Cube
     //
     public void u()
     {
-        history.add("u");
+        try{Thread.sleep(interval);}catch(Exception ex){}
+        history.add("U");
         Block[][] temp = new Block[3][3];
         for(int i = 0 ; i < 3 ; i++)
         {
@@ -331,7 +341,8 @@ public class Cube
     }
     public void ui()
     {
-        history.add("ui");
+        try{Thread.sleep(interval);}catch(Exception ex){}
+        history.add("UI");
         Block[][] temp = new Block[3][3];
         for(int i = 0 ; i < 3 ; i++)
         {
@@ -353,7 +364,8 @@ public class Cube
     //
     public void d()
     {
-        history.add("d");
+        try{Thread.sleep(interval);}catch(Exception ex){}
+        history.add("D");
         Block[][] temp = new Block[3][3];
          for(int i = 0 ; i < 3 ; i++)
         {
@@ -374,7 +386,8 @@ public class Cube
     }
     public void di()
     {
-        history.add("di");
+        try{Thread.sleep(interval);}catch(Exception ex){}
+        history.add("DI");
         Block[][] temp = new Block[3][3];
         for(int i = 0 ; i < 3 ; i++)
         {
@@ -396,7 +409,8 @@ public class Cube
     //
     public void turn_r()
     {
-        history.add("R");
+        try{Thread.sleep(interval);}catch(Exception ex){}
+        history.add("TR");
         Block[][] temp = new Block[3][3];
         for(int l = 0 ; l < 3 ; l++)
         {
@@ -420,7 +434,9 @@ public class Cube
     }
     public void turn_l()
     {
-        history.add("L");
+        try{Thread.sleep(interval);}catch(Exception ex){}
+        history.add("TL");
+        try{Thread.sleep(interval);}catch(Exception ex){}
         Block[][] temp = new Block[3][3];
         for(int l = 0 ; l < 3 ; l++)
         {
@@ -443,32 +459,61 @@ public class Cube
         update();
     }
     //
+    public void rb()//roll backward
+    {
+        try{Thread.sleep(interval);}catch(Exception ex){}
+        history.add("RB");
+        for(int k=0;k<3;k++)
+        {
+            Block[][] temp = new Block[3][3];
+            for(int i = 0 ; i < 3 ; i++)
+            {
+                for(int j = 0 ; j < 3 ; j++)
+                {
+                    temp[i][j] = new Block(this.cube[j][2-i][k]);
+                }
+            }
+            for(int i = 0 ; i < 3 ; i++)
+            {
+                for(int j = 0 ; j < 3 ; j++)
+                {
+                    this.cube[i][j][k] = new Block(temp[i][j]);
+                    this.cube[i][j][k].r();
+                }
+            }
+            update();
+        }
+    }
     public void invert()
     {
-        history.add("I");
-        Block[][] temp = new Block[3][3];
-        for(int l = 0 ; l < 3 ; l++)
+        rb();
+        rb();
+        turn_l();
+        turn_l();
+    }
+    public void rf()//roll forward
+    {
+        history.add("RF");
+        for(int k = 0;k<3;k++)
         {
-            for(int n = 1 ; n <= 2 ; n++)
+            Block[][] temp = new Block[3][3];
+            for(int i = 0 ; i < 3 ; i++)
             {
-                for(int i = 0 ; i < 3 ; i++)
+                for(int j = 0 ; j < 3 ; j++)
                 {
-                    for(int j = 0 ; j < 3 ; j++)
-                    {
-                        temp[i][j] = new Block(this.cube[2-j][l][i]);
-                    }
+                    temp[i][j] = new Block(this.cube[2-j][i][k]);
                 }
-                for(int i = 0 ; i < 3 ; i++)
+            }
+            for(int i = 0 ; i < 3 ; i++)
+            {
+                for(int j = 0 ; j < 3 ; j++)
                 {
-                    for(int j = 0 ; j < 3 ; j++)
-                    {
-                       this.cube[i][l][j] = new Block(temp[i][j]);
-                       this.cube[i][l][j].f();
-                    }
+                    this.cube[i][j][k] = new Block(temp[i][j]);
+                    this.cube[i][j][k].ri();
                 }
-            }           
+            }
+            update();
         }
-        update();
     }
     //
     public void scramble()
@@ -668,6 +713,7 @@ public class Cube
     //
     public void process(String move)
     {
+        move = move.toLowerCase();
         if(move.equals("u"))
         {
             u();
@@ -724,11 +770,15 @@ public class Cube
         {
             turn_l();
         }
-        else if(move.equals("i"))
+        else if(move.equals("rf"))
         {
-            invert();
+            rf();
         }
-        else if(move.equals("scr"))
+        else if(move.equals("rb"))
+        {
+            rb();
+        }
+        else if(move.equals("scr") || move.equals("scramble"))
         {
             scramble();
         }
