@@ -4,18 +4,64 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.FileReader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
+
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 public class GUI_Cube extends JFrame
 {
     public static long interval = 500; // interval between steps of solution in milliseconds
     public static long frame_rate = 250; // number of milliseconds interval between drawing successive frames
-    public static int scale = 10;       // scale of the whole image (scales the distance also)
+    public static int scale = 16;       // scale of the whole image (scales the distance also)
     public static int distance = 20;    // distance between the centres along x axis
     // co-ordinates of centre of left cube (changed with scale)
     public static int x=10;
     public static int y=10;
-
+    public static void load_preferences()
+    {
+        JSONParser jp = new JSONParser();
+        try
+        {
+            JSONObject obj = (JSONObject) jp.parse(new FileReader("program files/config.json"));
+            try
+            {
+                scale = (int)(long)obj.get("scale");
+                distance = (int)(long)obj.get("distance");
+                frame_rate = (int)(long)obj.get("framerate");
+                interval = (int)(long)obj.get("interval");
+                x = (int)(long)obj.get("x");
+                y = (int)(long)obj.get("y");
+            }
+            catch(Exception e)
+            {
+                JOptionPane.showMessageDialog(new JFrame(),e.getMessage()+"\nconfig.json has been corrupted, default settings will be used","Warning",JOptionPane.WARNING_MESSAGE);
+                rewrite_config();
+            }
+        }
+        catch(Exception ex)
+        {
+            JOptionPane.showMessageDialog(new JFrame(),"config.json not found, using default settings","Warning",JOptionPane.WARNING_MESSAGE);
+            rewrite_config();
+        }
+    }
+    public static void rewrite_config()
+    {
+        JSONObject obj = new JSONObject();
+        obj.put("scale",scale);
+        obj.put("distance",distance);
+        obj.put("framerate",frame_rate);
+        obj.put("interval",interval);
+        obj.put("x",x);
+        obj.put("y",y);
+        try
+        {
+            Files.writeString(Paths.get("program files/config.json"), obj.toString());
+        }catch(Exception ignored){}
+    }
     private final Cube cube = new Cube();
     private JPanel mainPanel;
     private JTextField inputTextField;
@@ -58,7 +104,7 @@ public class GUI_Cube extends JFrame
     GUI_Cube()
     {
         super("Rubik's cube");
-        ImageIcon icon = new ImageIcon("icon.png");
+        ImageIcon icon = new ImageIcon("program files/icon.png");
         drawPanel.setMinimumSize(new Dimension(scale*(2*x+distance),scale*(2*y)));
         stepRadioButton.setSelected(true);
         this.setIconImage(icon.getImage());
