@@ -27,7 +27,7 @@ download __Rubik's cube simulator.jar__ found [here](https://rebrand.ly/r1ckr0l1
 
 ## Screenshots
 ---
-![alt text](screenshot%201.png)
+![alt text](doc/screenshot%201.png)
 
 ---
 ![alt text](screenshot%202.png)
