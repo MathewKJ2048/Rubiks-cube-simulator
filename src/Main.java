@@ -7,10 +7,10 @@ public class Main
     public static void main(String args[])
     {
         try
-        {
+        {   // everything is in a try block incase of unforeseen errors/exceptions
             UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-        } catch (Exception e) {}
-        GUI_Cube.load_preferences();
-        GUI_Cube f = new GUI_Cube();
+            GUI_Cube.load_preferences();
+            GUI_Cube f = new GUI_Cube();
+        } catch (Exception e) {e.printStackTrace();}
     }
 }

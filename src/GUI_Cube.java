@@ -103,7 +103,7 @@ public class GUI_Cube extends JFrame
     }
     GUI_Cube()
     {
-        super("Rubik's cube");
+        super("Rubik's cube simulator");
         ImageIcon icon = new ImageIcon("program files/icon.png");
         drawPanel.setMinimumSize(new Dimension(scale*(2*x+distance),scale*(2*y)));
         stepRadioButton.setSelected(true);
@@ -151,9 +151,9 @@ public class GUI_Cube extends JFrame
             {
                 while(true)
                 {
-                    if(control.paint)set_cube();
                     try
                     {
+                        if(control.paint)set_cube();
                         Thread.sleep(frame_rate);
                     }catch(Exception ignored){}
                 }
