@@ -166,6 +166,7 @@ public class GUI_Cube extends JFrame
             Cube_solver.solve(cube, stepRadioButton.isSelected()?interval:0);
             try{Thread.sleep(stepRadioButton.isSelected()?2*(frame_rate+interval):0);}catch(Exception ex){}
             control.paint = false;
+            set_cube();
         });
         UButton.addActionListener(e -> {
             cube.u();
