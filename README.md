@@ -12,13 +12,13 @@ A headless JRE will not be suitable since swing is used.
 1. Download linux.zip file found [here](https://github.com/MathewKJ2048/Rubiks-cube-simulator/tree/main/downloads).
 2. Extract the contents.
 3. Give __run.sh__ permission to execute.
-4. execute __run.sh__.
+4. Execute __run.sh__.
 
 
 ### For Windows:  
 1. Download the windows.zip file found [here](https://github.com/MathewKJ2048/Rubiks-cube-simulator/tree/main/downloads).
 2. Extract the contents.
-3. double-click __Rubik's cube simulator.exe__ to run the program.
+3. Double-click __Rubik's cube simulator.exe__ to run the program.
 
 ### For OSX:
 
