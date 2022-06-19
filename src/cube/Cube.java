@@ -519,7 +519,7 @@ public class Cube
     public void scramble()
     {
         int r;
-        for(int i = 0 ; i < 10000 ; i++)
+        for(int i = 0 ; i < 1000 ; i++)
         {
             r = (int)(Math.random()*1000)%12;
             if(r == 0)
