@@ -30,13 +30,13 @@ download __Rubik's cube simulator.jar__ found [here](https://rebrand.ly/r1ckr0l1
 ![alt text](doc/screenshot%201.png)
 
 ---
-![alt text](screenshot%202.png)
+![alt text](doc/screenshot%202.png)
 
 ---
 
 ## Notation
 
-![alt text](diagram.png)
+![alt text](doc/diagram.png)
 
 U – up  
 D – down  
