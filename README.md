@@ -85,7 +85,7 @@ The input text area is case-insensitive.
 `RF` – roll forward  
 `RB` – roll back  
 `SCR` – scramble 
-`
+
 
 ### Log:
 When a command is carried out, it is logged.
