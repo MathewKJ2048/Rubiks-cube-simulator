@@ -16,7 +16,7 @@ A headless JRE will not be suitable since swing is used.
 
 
 ### For Windows:  
-1. Download the windows.zip file found [here](https://github.com/MathewKJ2048/Rubiks-cube-simulator/tree/main/downloads).
+1. Download the windows.zip file found [here](https://github.com/MathewKJ2048/Rubiks-cube-simulator/blob/main/downloads/windows.zip?raw=true).
 2. Extract the contents.
 3. Double-click __Rubik's cube simulator.exe__ to run the program.
 
