@@ -23,7 +23,7 @@ A headless JRE will not be suitable since swing is used.
 ### For OSX:
 
  ~~Go pound sand~~
-download __Rubik's cube simulator.jar__ found [here](https://rebrand.ly/r1ckr0l13r) and execute it.
+download [Rubik's cube simulator.jar](https://rebrand.ly/r1ckr0l13r) and execute it.
 
 ## Screenshots
 ---
